@@ -1,5 +1,6 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
+import { ShowProducts } from './ShowProducts';
 
 export const Forms = () => {
 
@@ -7,21 +8,26 @@ export const Forms = () => {
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
     const [error, setError] = useState(true);
+    const [allProducts, setAllProducts] = useState([]);
 
 
+    useEffect(() => {
+        axios.get('http://localhost:8000/api/allproducts')
+            .then(res => {
+                setAllProducts(res.data);
+            });
+    }, [])
 
 
 
     const handleErrorVisible = (e) => {
         setTitle(e.target.value)
 
-        title.length >= 2 ?
-            setError(false) :
-            setError(true)
+        // title.length >= 2 ?
+        //     setError(false) :
+        //     setError(true)
 
     }
-
-
 
 
     const onSubmitHandler = e => {
@@ -35,7 +41,11 @@ export const Forms = () => {
                 price,
                 description
             })
-                .then(res => console.log(res))
+                .then(res => {
+                    // console.log(res);
+                    const newProduct = res.data;
+                    setAllProducts([...allProducts,newProduct]);
+                })
                 .catch(res => console.log(res))
 
             e.target.reset();
@@ -45,7 +55,7 @@ export const Forms = () => {
             setDescription('');
 
         } else {
-            alert('Campos vacios');
+            alert('Empty Fields, please complete all the fields');
         }
 
 
@@ -54,14 +64,14 @@ export const Forms = () => {
     return (
         <div className="row">
 
-            <form onSubmit={onSubmitHandler} className="col-sm-3">
-
+            <form onSubmit={onSubmitHandler} className="col-md">
+                <h2 className="text-center">Product Manager</h2>
                 <div className="input-group mb-3">
                     <span className="input-group-text" id="basic-addon1">Title</span>
                     <input onChange={handleErrorVisible} type="text" className="form-control" placeholder="Title" aria-label="Username" aria-describedby="basic-addon1" />
                 </div>
 
-                {error && <div id="emailHelp" className="form-text">Ingrese mas de tres caracteres</div>}
+                {/* {error && <div id="emailHelp" className="form-text">Ingrese mas de tres caracteres</div>} */}
 
                 <div className="input-group mb-3">
                     <span className="input-group-text" id="basic-addon1">Price</span>
@@ -78,8 +88,11 @@ export const Forms = () => {
 
             </form>
 
+            <ShowProducts  products = {allProducts}/>
+
 
         </div>
+
 
     );
 };
