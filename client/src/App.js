@@ -1,37 +1,35 @@
-
-import { Forms } from './components/Forms';
-import { ShowProducts } from './components/ShowProducts';
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Detail } from './components/Detail';
+import { Mycontext } from "./context/Mycontext";
+import Detail from "./views/Detail";
+import {Main} from "./views/Main";
+import { Update } from "./views/Update";
 
 
 function App() {
 
-  
 
   return (
 
+    <div className="d-flex justify-content-center">
+
       <BrowserRouter>
-      
-      <div className="d-flex justify-content-center">
 
+      <Mycontext>
+        <Routes>
 
-         
-          <Routes>
+          <Route path='/' element = {<Main />}/>    
+          <Route path='/:id' element = {<Detail/>}/>  
+          <Route path='/:id/edit' element = {<Update/>}/>  
+          
 
-            <Route path="/" element={ <Forms/>}/>  
-            <Route path="/api/allproducts" element={ <ShowProducts/>}/>           
-            {/* <Route path="/api/product/:id" element={ <Detail/>}/>  */}
-            <Route path="/:id" element={ <Detail/>}/> 
-           
+        </Routes>
 
-          </Routes>
-
-        </div>
+      </Mycontext>
 
       </BrowserRouter>
-
-
+    </div>
+   
 
   );
 }
